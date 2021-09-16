@@ -2,8 +2,8 @@
 """ index """
 from api.v1.views import app_views
 import json
-st = app_views(st)
 
-st.route('/status')
+@app_views.route('/status')
 def status():
-    return json.dump({'status': 'OK'})
+    dic = {'status': 'OK'}
+    return json.dumps(dic, indent=2)
