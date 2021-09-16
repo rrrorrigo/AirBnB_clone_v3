@@ -77,6 +77,6 @@ class FileStorage:
     def get(self, cls, id):
         """method to retrieve one object"""
         try:
-            return self.__objects[cls.__class__.__name__ + "." + id]
+            return self.all(cls)
         except:
             return None
