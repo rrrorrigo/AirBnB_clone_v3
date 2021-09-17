@@ -4,6 +4,8 @@ from flask import Flask
 from models import storage
 from api.v1.views import app_views
 from os import getenv
+from flask import jsonify
+
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -13,6 +15,12 @@ app.register_blueprint(app_views, url_prefix='/api/v1')
 def bye(self):
     """display on route / Hello HBNB!"""
     storage.close()
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    """handler for 404 errors that returns a JSON-formatted 404 status code response"""
+    return jsonify(error="Not found"), 404
 
 if __name__ == '__main__':
     hostHBNB = getenv('HBNB_API_HOST')
