@@ -7,6 +7,7 @@ from flask import request
 from models.state import State
 from models import storage
 from api.v1.views import app_views
+from api.v1.app import app
 
 
 @app_views.route('/states', methods=['GET'])
@@ -47,12 +48,10 @@ def deleteMethod(state_id):
 def postMethod():
     """Creates a State"""
     data = request.get_json()
-    if not request.is_json:
-        msg = dumps({'Message': 'Not a JSON'})
-        abort(Response(msg, 400))
+    if not data:
+        abort(400, "Not a JSON")
     if 'name' not in data:
-        msg = dumps({'Message': 'Missing name'})
-        abort(Response(msg, 400))
+        abort(400, "Missing name")
     instance = State(**data)
     instance.save()
     return jsonify(instance.to_dict()), 201
@@ -66,8 +65,7 @@ def putMethod(state_id):
         abort(404)
     data = request.get_json()
     if not request.is_json:
-        msg = dumps({'Message': 'Not a JSON'})
-        abort(Response(msg, 400))
+        abort(400, "Not a JSON")
     for key, value in data.items():
         if key not in ['id', 'created_at', 'updated_at']:
             setattr(storage.all()[k], key, value)
