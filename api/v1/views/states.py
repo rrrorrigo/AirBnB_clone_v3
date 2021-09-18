@@ -1,0 +1,63 @@
+#!/usr/bin/python3
+"""view for State objects that handles all default RESTFul API actions"""
+from flask import Flask
+from flask import jsonify
+from flask import abort
+from models.state import State
+from models import storage
+from api.v1.views import app_views
+
+
+@app_views.route('/states', methods=['GET'])
+def states():
+    """Retrieves the list of all State objects"""
+    print("A VER")
+    return storage.all()
+
+
+@app_views.route("/states/<state_id>", methods=['GET'])
+def getMethod(id):
+    """Retrieves a State object"""
+    try:
+        return storage.get(State, id)
+    except:
+        abort(404)
+
+
+@app_views.route("/states/<state_id>", methods=['DELETE'])
+def deleteMethod(id):
+    """Deletes a State object"""
+    try:
+        storage.delete(State, id)
+        return {}, 200
+    except:
+        abort(404)
+
+
+@app_views.route("/states", methods=['POST'])
+def postMethod():
+    """Creates a State"""
+    data = request.get_json()
+    if not request.is_json:
+        msg = dumps({'Message': 'Not a JSON'})
+        abort(Response(msg, 400))
+    if 'name' not in data:
+        msg = dumps({'Message': 'Missing name'})
+        abort(Response(msg, 400))
+    return data, 201
+
+
+@app_views.route("/states/<state_id>", methods=['PUT'])
+def postMethod(id):
+    """Updates a State object"""
+    k = "State." + str(id)
+    if k not in storage.all():
+        abort(404)
+    data = request.to_json()
+    if not request.is_json:
+        msg = dumps({'Message': 'Not a JSON'})
+        abort(Response(msg, 400))
+    for key, value in data.items():
+        if key not in ['id', 'created_at', 'updated_at']:
+            setattr(storage.all()[k], key, value)
+    return storage.all()[k], 200
