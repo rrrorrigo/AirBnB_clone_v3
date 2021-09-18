@@ -3,6 +3,7 @@
 from flask import Flask
 from flask import jsonify
 from flask import abort
+from flask import request
 from models.state import State
 from models import storage
 from api.v1.views import app_views
@@ -11,30 +12,35 @@ from api.v1.views import app_views
 @app_views.route('/states', methods=['GET'])
 def states():
     """Retrieves the list of all State objects"""
-    print("A VER")
-    return storage.all()
-
-
-@app_views.route("/states/<state_id>", methods=['GET'])
-def getMethod(id):
-    """Retrieves a State object"""
     try:
-        return storage.get(State, id)
+        States = storage.all(State)
+        StateList = []
+        for k in States:
+            StateList.append(States[k].to_dict())
+        return jsonify(StateList)
     except:
         abort(404)
 
 
+@app_views.route("/states/<string:state_id>", methods=['GET'])
+def getMethod(state_id):
+    """Retrieves a State object"""
+    state = storage.get(State, state_id).to_dict()
+    return jsonify(state)
+    abort(404)
+
+
 @app_views.route("/states/<state_id>", methods=['DELETE'])
-def deleteMethod(id):
+def deleteMethod(state_id):
     """Deletes a State object"""
     try:
-        storage.delete(State, id)
+        storage.delete(State, state_id)
         return {}, 200
     except:
         abort(404)
 
 
-@app_views.route("/states", methods=['POST'])
+@app_views.route("/states", methods=['POST'], endpoint='statesPost')
 def postMethod():
     """Creates a State"""
     data = request.get_json()
@@ -44,13 +50,17 @@ def postMethod():
     if 'name' not in data:
         msg = dumps({'Message': 'Missing name'})
         abort(Response(msg, 400))
-    return data, 201
+    storage.new(State)
+    storage.save()
+    k = "State." + list(storage.all(State).values())[0].id
+    setattr(storage.all(State)[k], 'name', data['name'])
+    return jsonify(storage.all(State)[k]), 201
 
 
 @app_views.route("/states/<state_id>", methods=['PUT'])
-def postMethod(id):
+def putMethod(state_id):
     """Updates a State object"""
-    k = "State." + str(id)
+    k = "State." + str(state_id)
     if k not in storage.all():
         abort(404)
     data = request.to_json()
