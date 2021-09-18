@@ -25,9 +25,11 @@ def states():
 @app_views.route("/states/<string:state_id>", methods=['GET'])
 def getMethod(state_id):
     """Retrieves a State object"""
-    state = storage.get(State, state_id).to_dict()
-    return jsonify(state)
-    abort(404)
+    try:
+        state = storage.get(State, state_id).to_dict()
+        return jsonify(state)
+    except:
+        abort(404)
 
 
 @app_views.route("/states/<state_id>", methods=['DELETE'])
@@ -35,6 +37,7 @@ def deleteMethod(state_id):
     """Deletes a State object"""
     try:
         storage.delete(State, state_id)
+        storage.save()
         return {}, 200
     except:
         abort(404)
@@ -50,11 +53,9 @@ def postMethod():
     if 'name' not in data:
         msg = dumps({'Message': 'Missing name'})
         abort(Response(msg, 400))
-    storage.new(State)
-    storage.save()
-    k = "State." + list(storage.all(State).values())[0].id
-    setattr(storage.all(State)[k], 'name', data['name'])
-    return jsonify(storage.all(State)[k]), 201
+    instance = State(**data)
+    instance.save()
+    return jsonify(instance.to_dict()), 201
 
 
 @app_views.route("/states/<state_id>", methods=['PUT'])
@@ -63,11 +64,12 @@ def putMethod(state_id):
     k = "State." + str(state_id)
     if k not in storage.all():
         abort(404)
-    data = request.to_json()
+    data = request.get_json()
     if not request.is_json:
         msg = dumps({'Message': 'Not a JSON'})
         abort(Response(msg, 400))
     for key, value in data.items():
         if key not in ['id', 'created_at', 'updated_at']:
             setattr(storage.all()[k], key, value)
-    return storage.all()[k], 200
+    storage.all()[k].save()
+    return jsonify(storage.get(State, state_id).to_dict()), 200

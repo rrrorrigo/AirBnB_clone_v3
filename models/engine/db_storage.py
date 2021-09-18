@@ -59,12 +59,12 @@ class DBStorage:
         """commit all changes of the current database session"""
         self.__session.commit()
 
-    def delete(self, obj=None):
+    def delete(self, obj=None, id=None):
         """delete from the current database session obj if not None"""
         if obj is not None and not id:
             self.__session.delete(obj)
         if obj and id:
-            self.__session.query(obj).filter(id = id).delete()
+            self.__session.query(obj).filter_by(id=id).delete()
 
     def reload(self):
         """reloads data from the database"""
