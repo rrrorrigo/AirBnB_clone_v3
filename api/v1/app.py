@@ -23,6 +23,13 @@ def page_not_found(e):
     """handler for 404 errors that returns a JSON-formatted 404 status code response"""
     return jsonify(error="Not found"), 404
 
+
+@app.after_request
+def after_request(response):
+    """create a CORS instance allowing: /* for 0.0.0.0"""
+    response.headers["Access-Control-Allow-Origin"] = "0.0.0.0"
+    return response
+
 if __name__ == '__main__':
     hostHBNB = getenv('HBNB_API_HOST')
     portHBNB = getenv('HBNB_API_PORT')
