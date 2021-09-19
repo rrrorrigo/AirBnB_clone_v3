@@ -23,7 +23,7 @@ def place(city_id):
         abort(404)
 
 
-@app_views.route("/place/<string:place_id>", methods=['GET'])
+@app_views.route("/places/<string:place_id>", methods=['GET'])
 def getPlaces(place_id):
     """Retrieves a Place object"""
     try:
@@ -33,7 +33,7 @@ def getPlaces(place_id):
         abort(404)
 
 
-@app_views.route("/place/<place_id>", methods=['DELETE'])
+@app_views.route("/places/<place_id>", methods=['DELETE'])
 def deletePlaces(place_id):
     """Deletes a Place object"""
     try:
@@ -44,7 +44,7 @@ def deletePlaces(place_id):
         abort(404)
 
 
-@app_views.route("/cities/<city_id>/place",
+@app_views.route("/cities/<city_id>/places",
                  methods=['POST'], endpoint='placePost')
 def postPlaces(city_id):
     """Creates a Place"""
@@ -66,7 +66,7 @@ def postPlaces(city_id):
     return jsonify(instance.to_dict()), 201
 
 
-@app_views.route("/place/<place_id>", methods=['PUT'])
+@app_views.route("/places/<place_id>", methods=['PUT'])
 def putPlaces(place_id):
     """Updates a Place object"""
     k = "Place." + str(place_id)
