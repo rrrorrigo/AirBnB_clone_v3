@@ -8,7 +8,7 @@ from models import storage
 from api.v1.views import app_views
 
 
-@app_views.route('/cities', methods=['GET'])
+@app_views.route('/states/<state_id>/cities', methods=['GET'])
 def cities():
     """Retrieves the list of all City objects"""
     try:
@@ -22,7 +22,7 @@ def cities():
 
 
 @app_views.route("/cities/<string:City_id>", methods=['GET'])
-def getMethod(City_id):
+def citiesGet(City_id):
     """Retrieves a City object"""
     try:
         cities = storage.get(City, City_id).to_dict()
@@ -32,7 +32,7 @@ def getMethod(City_id):
 
 
 @app_views.route("/cities/<City_id>", methods=['DELETE'])
-def deleteMethod(City_id):
+def citiesDel(City_id):
     """Deletes a City object"""
     try:
         storage.delete(City, City_id)
@@ -43,7 +43,7 @@ def deleteMethod(City_id):
 
 
 @app_views.route("/cities", methods=['POST'], endpoint='CitysPost')
-def postMethod():
+def citiesPost():
     """Creates a City"""
     data = request.get_json()
     if not data:
@@ -56,7 +56,7 @@ def postMethod():
 
 
 @app_views.route("/cities/<City_id>", methods=['PUT'])
-def putMethod(City_id):
+def citiesPut(City_id):
     """Updates a City object"""
     k = "City." + str(City_id)
     if k not in storage.all():
