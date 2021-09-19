@@ -52,10 +52,11 @@ def citiesPost(state_id):
     if 'name' not in data:
         abort(400, "Missing name")
     try:
-        stat = storage.get(State, state_id).to_dict()
+        stat = storage.get(State, state_id)
     except:
         abort(404)
     instance = City(**data)
+    instance.state_id = state_id
     instance.save()
     return jsonify(instance.to_dict()), 201
 
