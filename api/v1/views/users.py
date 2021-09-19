@@ -8,7 +8,7 @@ from models import storage
 from api.v1.views import app_views
 
 
-@app_views.route('/user', methods=['GET'])
+@app_views.route('/users', methods=['GET'])
 def user():
     """Retrieves the list of all User objects"""
     try:
@@ -21,7 +21,7 @@ def user():
         abort(404)
 
 
-@app_views.route("/user/<string:user_id>", methods=['GET'])
+@app_views.route("/users/<string:user_id>", methods=['GET'])
 def getUser(user_id):
     """Retrieves a User object"""
     try:
@@ -31,7 +31,7 @@ def getUser(user_id):
         abort(404)
 
 
-@app_views.route("/user/<user_id>", methods=['DELETE'])
+@app_views.route("/users/<user_id>", methods=['DELETE'])
 def deleteUser(user_id):
     """Deletes a User object"""
     try:
@@ -42,7 +42,7 @@ def deleteUser(user_id):
         abort(404)
 
 
-@app_views.route("/user", methods=['POST'], endpoint='userPost')
+@app_views.route("/users", methods=['POST'], endpoint='userPost')
 def postUser():
     """Creates a User"""
     data = request.get_json()
@@ -57,7 +57,7 @@ def postUser():
     return jsonify(instance.to_dict()), 201
 
 
-@app_views.route("/user/<user_id>", methods=['PUT'])
+@app_views.route("/users/<user_id>", methods=['PUT'])
 def putUser(user_id):
     """Updates a User object"""
     k = "User." + str(user_id)
@@ -70,4 +70,7 @@ def putUser(user_id):
         if key not in ['id', 'created_at', 'updated_at', 'email']:
             setattr(storage.all()[k], key, value)
     storage.all()[k].save()
-    return jsonify(storage.get(User, user_id).to_dict()), 200
+    try:
+        return jsonify(storage.get(User, user_id).to_dict()), 200
+    except:
+        abort(404)
