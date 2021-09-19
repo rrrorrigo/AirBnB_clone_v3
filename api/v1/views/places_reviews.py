@@ -79,4 +79,7 @@ def putPlacesReview(review_id):
                        'user_id', 'place_id']:
             setattr(storage.all()[k], key, value)
     storage.all()[k].save()
-    return jsonify(storage.get(Review, review_id).to_dict()), 200
+    try:
+        return jsonify(storage.get(Review, review_id).to_dict()), 200
+    except:
+        abort(404)
