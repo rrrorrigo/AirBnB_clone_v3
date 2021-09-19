@@ -22,7 +22,7 @@ def user():
 
 
 @app_views.route("/user/<string:user_id>", methods=['GET'])
-def getMethod(user_id):
+def getUser(user_id):
     """Retrieves a User object"""
     try:
         user = storage.get(User, user_id).to_dict()
@@ -32,7 +32,7 @@ def getMethod(user_id):
 
 
 @app_views.route("/user/<user_id>", methods=['DELETE'])
-def deleteMethod(user_id):
+def deleteUser(user_id):
     """Deletes a User object"""
     try:
         storage.delete(User, user_id)
@@ -43,7 +43,7 @@ def deleteMethod(user_id):
 
 
 @app_views.route("/user", methods=['POST'], endpoint='userPost')
-def postMethod():
+def postUser():
     """Creates a User"""
     data = request.get_json()
     if not data:
@@ -58,7 +58,7 @@ def postMethod():
 
 
 @app_views.route("/user/<user_id>", methods=['PUT'])
-def putMethod(user_id):
+def putUser(user_id):
     """Updates a User object"""
     k = "User." + str(user_id)
     if k not in storage.all():

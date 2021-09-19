@@ -23,7 +23,7 @@ def reviews(place_id):
     return jsonify(ReviewList)
 
 @app_views.route("/reviews/<review_id>", methods=['GET'])
-def getMethod(review_id):
+def getPlacesReview(review_id):
     """Retrieves a Review object"""
     try:
         review = storage.get(Review, review_id).to_dict()
@@ -33,7 +33,7 @@ def getMethod(review_id):
 
 
 @app_views.route("/reviews/<review_id>", methods=['DELETE'])
-def deleteMethod(review_id):
+def deletePlacesReview(review_id):
     """Deletes a Review object"""
     try:
         storage.delete(Review, review_id)
@@ -44,7 +44,7 @@ def deleteMethod(review_id):
 
 
 @app_views.route("/places/<place_id>/reviews", methods=['POST'], endpoint='reviewsPost')
-def postMethod(place_id):
+def postPlacesReview(place_id):
     """Creates a Review"""
     data = request.get_json()
     if not data:
@@ -64,7 +64,7 @@ def postMethod(place_id):
 
 
 @app_views.route("/reviews/<review_id>", methods=['PUT'])
-def putMethod(review_id):
+def putPlacesReview(review_id):
     """Updates a Review object"""
     k = "Review." + str(review_id)
     if k not in storage.all():

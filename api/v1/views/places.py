@@ -24,7 +24,7 @@ def place(city_id):
 
 
 @app_views.route("/place/<string:place_id>", methods=['GET'])
-def getMethod(place_id):
+def getPlaces(place_id):
     """Retrieves a Place object"""
     try:
         place = storage.get(Place, place_id).to_dict()
@@ -34,7 +34,7 @@ def getMethod(place_id):
 
 
 @app_views.route("/place/<place_id>", methods=['DELETE'])
-def deleteMethod(place_id):
+def deletePlaces(place_id):
     """Deletes a Place object"""
     try:
         storage.delete(Place, place_id)
@@ -45,7 +45,7 @@ def deleteMethod(place_id):
 
 
 @app_views.route("/cities/<city_id>/place", methods=['POST'], endpoint='placePost')
-def postMethod(city_id):
+def postPlaces(city_id):
     """Creates a Place"""
     data = request.get_json()
     if not data:
@@ -66,7 +66,7 @@ def postMethod(city_id):
 
 
 @app_views.route("/place/<place_id>", methods=['PUT'])
-def putMethod(place_id):
+def putPlaces(place_id):
     """Updates a Place object"""
     k = "Place." + str(place_id)
     if k not in storage.all():
