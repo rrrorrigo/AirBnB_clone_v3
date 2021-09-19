@@ -43,7 +43,8 @@ def citiesDel(city_id):
         abort(404)
 
 
-@app_views.route("/states/<state_id>/cities", methods=['POST'], endpoint='CitysPost')
+@app_views.route("/states/<state_id>/cities",
+                 methods=['POST'], endpoint='CitysPost')
 def citiesPost(state_id):
     """Creates a City"""
     data = request.get_json()

@@ -22,6 +22,7 @@ def reviews(place_id):
         ReviewList.append(review.to_dict())
     return jsonify(ReviewList)
 
+
 @app_views.route("/reviews/<review_id>", methods=['GET'])
 def getPlacesReview(review_id):
     """Retrieves a Review object"""
@@ -43,7 +44,8 @@ def deletePlacesReview(review_id):
         abort(404)
 
 
-@app_views.route("/places/<place_id>/reviews", methods=['POST'], endpoint='reviewsPost')
+@app_views.route("/places/<place_id>/reviews",
+                 methods=['POST'], endpoint='reviewsPost')
 def postPlacesReview(place_id):
     """Creates a Review"""
     data = request.get_json()
@@ -73,7 +75,8 @@ def putPlacesReview(review_id):
     if not request.is_json:
         abort(400, "Not a JSON")
     for key, value in data.items():
-        if key not in ['id', 'created_at', 'updated_at', 'user_id', 'place_id']:
+        if key not in ['id', 'created_at', 'updated_at',
+                       'user_id', 'place_id']:
             setattr(storage.all()[k], key, value)
     storage.all()[k].save()
     return jsonify(storage.get(Review, review_id).to_dict()), 200

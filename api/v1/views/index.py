@@ -11,6 +11,7 @@ def status():
     dic = {'status': 'OK'}
     return json.dumps(dic, indent=2)
 
+
 @app_views.route('/stats')
 def count():
     dic = {

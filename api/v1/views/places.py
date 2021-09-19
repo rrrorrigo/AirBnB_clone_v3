@@ -44,7 +44,8 @@ def deletePlaces(place_id):
         abort(404)
 
 
-@app_views.route("/cities/<city_id>/place", methods=['POST'], endpoint='placePost')
+@app_views.route("/cities/<city_id>/place",
+                 methods=['POST'], endpoint='placePost')
 def postPlaces(city_id):
     """Creates a Place"""
     data = request.get_json()
