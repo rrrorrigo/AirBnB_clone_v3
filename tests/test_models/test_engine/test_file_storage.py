@@ -1,8 +1,9 @@
-#!/usr/bin/python3
+#       obj/bin/python3
 """
 Contains the TestFileStorageDocs classes
 """
 
+from HBNB3.models.base_model import Base
 from datetime import datetime
 import inspect
 import models
@@ -113,3 +114,21 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_get(self):
+        """Test for get method"""
+        storage = FileStorage()
+        for k, cls in classes.items():
+            obj = cls()
+            obj.save()
+            obj2 = storage.get(cls, obj.id)
+            self.assertEqual(obj2)
+            self.assertEqual(str, type(obj.id))
+    
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_count(self):
+        """Test for count method"""
+        storage = FileStorage()
+        for k, cls in classes.items():
+            self.assertEqual(storage.count(cls), len(self.all(cls)))
